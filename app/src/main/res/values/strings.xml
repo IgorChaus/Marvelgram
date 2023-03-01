@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MarvelVM</string>
+    <string name="prompt">Search</string>
+    <string name="explore_more">Explore more</string>
+    <string name="main_photo">Main photo</string>
+    <string name="little_photo">Little photo</string>
+</resources>
