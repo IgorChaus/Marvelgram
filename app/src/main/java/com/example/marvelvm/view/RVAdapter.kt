@@ -1,9 +1,6 @@
 package com.example.marvelvm.view
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,30 +9,56 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
+import com.example.marvelvm.wrappers.DarkItem
+import com.example.marvelvm.wrappers.IRow
+import com.example.marvelvm.wrappers.UsualItem
 
 
-class RVAdapter() : RecyclerView.Adapter<RVAdapter.PersonViewHolder>() {
+class RVAdapter(private val itemClickListener: ItemClickListener)
+    : RecyclerView.Adapter<RVAdapter.PersonViewHolder>() {
 
-    private var  persons: List<Person> = listOf()
+    interface ItemClickListener {
+        fun onItemClick(item: Person)
+    }
 
-    private var strSearch: String = ""
+    private var  persons: List<IRow> = listOf()
 
-    fun refreshUsers(persons: List<Person>) {
+
+    fun refreshUsers(persons: List<IRow>) {
         this.persons = persons
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): PersonViewHolder {
-        val v: View =
-            LayoutInflater.from(viewGroup.context).inflate(R.layout.item, viewGroup, false)
-        return PersonViewHolder(v)
+    override fun getItemViewType(position: Int): Int =
+        when (persons[position]) {
+            is UsualItem -> R.layout.item
+            is DarkItem -> R.layout.item_dark
+            else -> throw IllegalArgumentException()
+        }
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+        R.layout.item -> PersonViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item, parent, false))
+        R.layout.item_dark -> PersonViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_dark, parent, false))
+        else -> throw IllegalArgumentException()
     }
 
+
     override fun onBindViewHolder(personViewHolder: PersonViewHolder, position: Int) {
-        val path: String = persons[position].thumbnail.path + "." +
-                persons[position].thumbnail.extension
+        val path: String = (persons[position] as Person).thumbnail.path + "." +
+                (persons[position] as Person).thumbnail.extension
         Glide.with(personViewHolder.itemView.getContext()).load(path)
             .into(personViewHolder.personPhoto)
+        personViewHolder.itemView.setOnClickListener {
+            if (personViewHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }
+            itemClickListener.onItemClick(persons[position] as Person)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -2,6 +2,7 @@ package com.example.marvelvm.view
 
 import android.content.Context
 import android.graphics.Rect
+import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,9 +23,8 @@ class SpecialLayout(context: Context?) : LinearLayoutManager(context) {
     }
 
     override fun onLayoutChildren(recycler: Recycler, state: RecyclerView.State) {
-        //   detachAndScrapAttachedViews(recycler);
         if (itemCount > 0) {
-            fill(recycler)
+            fill(recycler, state)
         }
     }
 
@@ -365,23 +365,22 @@ class SpecialLayout(context: Context?) : LinearLayoutManager(context) {
         return viewBottom
     }
 
-    private fun fill(recycler: Recycler) {
+    private fun fill(recycler: Recycler, state: RecyclerView.State) {
+        Log.i("MyTag","fill")
         var anchorView: View?
         var ancher: Int
         viewCache.clear()
 
         // Помещаем вьюшки из лэйоута в кэш и...
-        run {
-            var i = 0
-            val cnt = childCount
-            while (i < cnt) {
-                val view =
-                    getChildAt(i) // Возвращает view из лэйоута по индексу
-                val pos = getPosition(view!!) // Возвращает позицию View в адаптере
-                viewCache.put(pos, view)
-                i++
-            }
+        var i = 0
+        val cnt = childCount
+        while (i < cnt) {
+            val view = getChildAt(i) // Возвращает view из лэйоута по индексу
+            val pos = getPosition(view!!) // Возвращает позицию View в адаптере
+            viewCache.put(pos, view)
+            i++
         }
+
 
         // Определяем якорную вьюшку
         // Это будет первая View в последней строке лэйоута, которая полностью видна
@@ -403,17 +402,19 @@ class SpecialLayout(context: Context?) : LinearLayoutManager(context) {
         }
         anchorView = viewCache[ancher]
 
-        //... и удалям из лэйаута (очищаем его)
+        // ... и удалям из лэйаута (очищаем его)
         for (i in 0 until viewCache.size()) {
             detachView(viewCache.valueAt(i)!!)
         }
+
+        // Отработка метода notifyDataSetChanged()
+        // Происходит обновление RecyclerView если поменялись в нем данные
+        if(state.didStructureChange())
+            viewCache.clear()
+
         topView = fillUp(recycler, anchorView) //Заполняем лэйоут от якоря вверх
         bottomView = fillDown(recycler, anchorView) //Заполняем лэйоут от якоря вниз
 
-        //Рециркулирукм лэйоут
-        for (i in 0 until viewCache.size()) {
-            recycler.recycleView(viewCache.valueAt(i)!!)
-        }
     }
 
     private fun setViewParametersDown(
@@ -488,7 +489,7 @@ class SpecialLayout(context: Context?) : LinearLayoutManager(context) {
     override fun scrollVerticallyBy(dy: Int, recycler: Recycler, state: RecyclerView.State): Int {
         val delta = scrollVerticallyInternal(dy)
         offsetChildrenVertical(-delta)
-        fill(recycler)
+        fill(recycler, state)
         return delta
     }
 

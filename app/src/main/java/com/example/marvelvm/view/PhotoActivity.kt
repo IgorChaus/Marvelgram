@@ -1,19 +1,27 @@
 package com.example.marvelvm.view
 
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.marvelvm.MainActivity
+import com.example.kode_viewmodel.source.DataRepository
+import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.R
+import com.example.marvelvm.model.Person
+import com.example.marvelvm.viewmodel.AppViewModel
 
-class PhotoActivity: AppCompatActivity() {
+@RequiresApi(Build.VERSION_CODES.O)
+class PhotoActivity: AppCompatActivity(), RVAdapter.ItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,28 +30,28 @@ class PhotoActivity: AppCompatActivity() {
         window.setBackgroundDrawable(ContextCompat
             .getDrawable(this, R.color.black))
 
-        val data: Int = getIntent().getExtras()!!.getInt("photo")
+        val photo: String? = getIntent().getExtras()!!.getString("photo")
+        val name: String? = getIntent().getExtras()!!.getString("name")
+        val description: String? = getIntent().getExtras()!!.getString("description")
 
         //Выводим стрелочку "Назад"
         val actionBar = getSupportActionBar()
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat
                 .getColor(this, R.color.black)))
-/*        actionBar?.setTitle(MainActivity.persons[data].name)
 
-        val imagePhoto: ImageView = findViewById<ImageView>(R.id.imagePhoto)
-        val path: String = (MainActivity.persons[data].thumbnail.path + "."
-                + MainActivity.persons[data].thumbnail.extension)
-        Glide.with(this).load(path).into(imagePhoto)
-        val textView: TextView = findViewById<TextView>(R.id.textView)
-        textView.setText(MainActivity.persons[data].description)*/
-        val rv: RecyclerView = findViewById<RecyclerView>(R.id.rv2)
-        val llm = LinearLayoutManager(
-            this, LinearLayoutManager.HORIZONTAL,
-            false
-        )
+        actionBar?.setTitle(name)
+
+        val imagePhoto: ImageView = findViewById(R.id.imagePhoto)
+        Glide.with(this).load(photo).into(imagePhoto)
+
+        val textView: TextView = findViewById(R.id.textView)
+        textView.text = description
+
+        val rv: RecyclerView = findViewById(R.id.rv2)
+        val llm = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rv.layoutManager = llm
-        val adapter = RVAdapter()
+        val adapter = RVAdapter(this)
         rv.adapter = adapter
     }
 
@@ -52,5 +60,17 @@ class PhotoActivity: AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         this.finish()
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onItemClick(item: Person){
+        actionBar?.setTitle(item.name)
+
+        val imagePhoto: ImageView = findViewById(R.id.imagePhoto)
+        val photo = item.thumbnail.path + "." + item.thumbnail.extension
+        Glide.with(this).load(photo).into(imagePhoto)
+
+        val textView: TextView = findViewById(R.id.textView)
+        textView.text = item.description
+
     }
 }
