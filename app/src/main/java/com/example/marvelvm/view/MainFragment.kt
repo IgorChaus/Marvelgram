@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kode_viewmodel.source.DataRepository
+import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.MainActivity
 import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
@@ -24,12 +26,15 @@ import com.example.marvelvm.viewmodel.AppViewModel
 
 class MainFragment : Fragment(), RVAdapter.ItemClickListener {
 
+
     companion object {
-        fun newInstance() = MainFragment()
+        fun getIstance() = MainFragment()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -48,9 +53,10 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
                 ContextCompat
                     .getColor(mainActivity, R.color.black))
         )
+        mainActivity.setTitle("")
         actionBar?.setIcon(R.drawable.marvel)
         actionBar?.setDisplayShowHomeEnabled(true)
-        mainActivity.setTitle("")
+        actionBar?.setDisplayHomeAsUpEnabled(false)
 
         val rv: RecyclerView = view.findViewById(R.id.rv1)
         val llm = SpecialLayout(mainActivity)
@@ -72,16 +78,19 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(item: Person){
-      /*  val intent = Intent(this, PhotoActivity::class.java)
+        val bundle = Bundle()
+        val itemFragment = ItemFragment.getInstance()
+        bundle.putString("name", item.name)
+        bundle.putString("description", item.description)
+        bundle.putString("photo", item.thumbnail.path + "." + item.thumbnail.extension)
+        itemFragment.setArguments(bundle)
 
-
-        intent.putExtra("photo", item.thumbnail.path + "." + item.thumbnail.extension)
-        intent.putExtra("description", item.description)
-        intent.putExtra("name", item.name)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-
-        startActivity(intent)*/
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.container, itemFragment)
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
 }

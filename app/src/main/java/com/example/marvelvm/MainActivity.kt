@@ -1,26 +1,13 @@
 package com.example.marvelvm
 
-import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.GridLayout
+import android.view.MenuItem
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBar
-import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.source.RetrofitInstance
-import com.example.marvelvm.model.Person
 import com.example.marvelvm.view.MainFragment
-import com.example.marvelvm.view.PhotoActivity
-import com.example.marvelvm.view.RVAdapter
-import com.example.marvelvm.view.SpecialLayout
 import com.example.marvelvm.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -38,14 +25,19 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
+                .replace(R.id.container, MainFragment.getIstance())
                 .commitNow()
         }
 
+    }
 
-  //      val viewModel = ViewModelProvider(this, MainActivity.factory).get(AppViewModel::class.java)
+    //Обрабатываем нажатие стрелки назад
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
+        if(supportFragmentManager.getBackStackEntryCount() > 0)
+            supportFragmentManager.popBackStack()
 
+        return super.onOptionsItemSelected(item)
     }
 
 }

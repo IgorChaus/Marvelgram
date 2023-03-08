@@ -27,7 +27,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".view.PhotoActivity" />
+        <activity android:name=".view.ItemFragment" />
     </application>
 
 </manifest>
