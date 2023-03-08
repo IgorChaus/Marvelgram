@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.view.MainFragment
@@ -13,15 +14,16 @@ import com.example.marvelvm.viewmodel.AppViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity() {
 
-
-    companion object{
-        val dataRepository = DataRepository(RetrofitInstance.service)
-        val factory = AppViewModel.Factory(dataRepository)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        val dataRepository = DataRepository(RetrofitInstance.service)
+        val factory = AppViewModel.Factory(dataRepository)
+        //Создаем экземпляр viewModel в хранилище Activity
+        ViewModelProvider(this, factory).get(AppViewModel::class.java)
+
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

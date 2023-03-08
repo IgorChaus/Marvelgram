@@ -17,6 +17,7 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     // Object must be observable but with a private setter, so we separate LiveData's objects
     private val itemsDataEmitter: MutableLiveData<List<IRow>> = MutableLiveData()
     val itemsLiveData: LiveData<List<IRow>> = itemsDataEmitter
+    val aa="Stop"
 
     lateinit var persons: List<Person>
 

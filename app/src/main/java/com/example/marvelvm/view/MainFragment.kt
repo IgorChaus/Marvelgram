@@ -1,6 +1,5 @@
 package com.example.marvelvm.view
 
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -9,17 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kode_viewmodel.source.DataRepository
-import com.example.kode_viewmodel.source.RetrofitInstance
-import com.example.marvelvm.MainActivity
 import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
@@ -31,10 +25,6 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         fun getIstance() = MainFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -42,7 +32,8 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-        val viewModel = ViewModelProvider(requireActivity(), MainActivity.factory).get(AppViewModel::class.java)
+   //     val viewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
+        val viewModel: AppViewModel by activityViewModels()
 
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         val mainActivity = activity as AppCompatActivity
@@ -69,7 +60,6 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.refreshUsers(it)
         }
-
         val editText: EditText = view.findViewById(R.id.editText)
         editText.addTextChangedListener {
                 s -> viewModel.searchPerson(s.toString())

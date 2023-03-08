@@ -3,9 +3,7 @@ package com.example.marvelvm.view
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,11 +12,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.marvelvm.MainActivity
 import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
@@ -36,7 +33,8 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-        val viewModel = ViewModelProvider(requireActivity(), MainActivity.factory).get(AppViewModel::class.java)
+     //   val viewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
+        val viewModel: AppViewModel by activityViewModels()
 
         val view = inflater.inflate(R.layout.fragment_item, container, false)
 
