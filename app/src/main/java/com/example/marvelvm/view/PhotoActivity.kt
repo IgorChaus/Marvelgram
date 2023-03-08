@@ -1,6 +1,5 @@
 package com.example.marvelvm.view
 
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -10,22 +9,18 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.kode_viewmodel.source.DataRepository
-import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
-import com.example.marvelvm.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 class PhotoActivity: AppCompatActivity(), RVAdapter.ItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_photo)
+        setContentView(R.layout.fragment_item)
 
         window.setBackgroundDrawable(ContextCompat
             .getDrawable(this, R.color.black))

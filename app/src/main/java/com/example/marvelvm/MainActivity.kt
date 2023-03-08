@@ -17,64 +17,35 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kode_viewmodel.source.DataRepository
 import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.model.Person
+import com.example.marvelvm.view.MainFragment
 import com.example.marvelvm.view.PhotoActivity
 import com.example.marvelvm.view.RVAdapter
 import com.example.marvelvm.view.SpecialLayout
 import com.example.marvelvm.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
-class MainActivity : AppCompatActivity(), RVAdapter.ItemClickListener {
+class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
 
+    companion object{
         val dataRepository = DataRepository(RetrofitInstance.service)
         val factory = AppViewModel.Factory(dataRepository)
-        val viewModel by lazy {ViewModelProvider(this,factory)
-            .get(AppViewModel::class.java)}
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val actionBar: ActionBar? = getSupportActionBar()
-        actionBar?.setBackgroundDrawable(
-            ColorDrawable(
-            ContextCompat
-                .getColor(this, R.color.black))
-        )
-        actionBar?.setIcon(R.drawable.marvel)
-        actionBar?.setDisplayShowHomeEnabled(true)
-        setTitle("")
-
-        val rv: RecyclerView = findViewById(R.id.rv1)
-        val llm = SpecialLayout(this)
-
-  //      val llm = GridLayoutManager(this, 3)
-        rv.layoutManager = llm
-        val adapter = RVAdapter(this)
-        rv.adapter = adapter
-
-        viewModel.itemsLiveData.observe(this) {
-            adapter.refreshUsers(it)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, MainFragment.newInstance())
+                .commitNow()
         }
 
-        val editText: EditText = findViewById(R.id.editText)
-        editText.addTextChangedListener {
-                s -> viewModel.searchPerson(s.toString())
-        }
+
+  //      val viewModel = ViewModelProvider(this, MainActivity.factory).get(AppViewModel::class.java)
+
 
     }
-
-    override fun onItemClick(item: Person){
-        val intent = Intent(this, PhotoActivity::class.java)
-
-
-        intent.putExtra("photo", item.thumbnail.path + "." + item.thumbnail.extension)
-        intent.putExtra("description", item.description)
-        intent.putExtra("name", item.name)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-
-        startActivity(intent)
-
-    }
-
 
 }
