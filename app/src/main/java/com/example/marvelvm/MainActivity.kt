@@ -18,12 +18,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val dataRepository = DataRepository(RetrofitInstance.service)
         val factory = AppViewModel.Factory(dataRepository)
         //Создаем экземпляр viewModel в хранилище Activity
         ViewModelProvider(this, factory).get(AppViewModel::class.java)
-
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
