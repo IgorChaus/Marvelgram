@@ -48,12 +48,13 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
 
         //Выводим стрелочку "Назад"
         val actionBar = mainActivity.supportActionBar
+
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat
                 .getColor(requireContext(), R.color.black)))
 
         actionBar?.setIcon(null)
-        mainActivity?.setTitle(name)
+        mainActivity.title = name
 
         val imagePhoto: ImageView = view.findViewById(R.id.imagePhoto)
         Glide.with(this).load(photo).into(imagePhoto)
@@ -78,7 +79,7 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
     override fun onItemClick(item: Person){
 
         val mainActivity = activity as AppCompatActivity
-        mainActivity?.setTitle(item.name)
+        mainActivity.title = item.name
 
         val imagePhoto: ImageView = requireView().findViewById(R.id.imagePhoto)
         val photo = item.thumbnail.path + "." + item.thumbnail.extension

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.MarvelVM" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
@@ -12,5 +12,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
+        <item name="appColorPrimary">@color/black</item>
+        <item name="appColorPrimaryVariant1">@color/grey_200</item>
+        <item name="appColorPrimaryVariant2">@color/grey_500</item>
+        <item name="appColorSecondary">@color/white</item>
     </style>
 </resources>
