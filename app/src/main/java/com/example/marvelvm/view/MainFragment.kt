@@ -40,9 +40,7 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
 
         val actionBar = mainActivity.supportActionBar
         actionBar?.setBackgroundDrawable(
-            ColorDrawable(
-                ContextCompat
-                    .getColor(mainActivity, R.color.black))
+            ColorDrawable(ContextCompat.getColor(mainActivity, R.color.black))
         )
         mainActivity.setTitle("")
         actionBar?.setIcon(R.drawable.marvel)
