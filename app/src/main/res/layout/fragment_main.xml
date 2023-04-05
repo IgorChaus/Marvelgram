@@ -1,70 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/Search"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="?attr/appColorPrimary"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingStart="12dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="11dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/Search"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/round_corners"
+            android:layout_height="56dp"
+            android:background="?attr/appColorPrimary"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="11dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-            <EditText
-                android:id="@+id/editText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:autofillHints="username"
-                android:backgroundTint="@android:color/transparent"
-                android:cursorVisible="false"
-                android:drawableStart="@drawable/icon_search"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:gravity="bottom"
-                android:hint="@string/prompt"
-                android:imeOptions="actionSearch"
-                android:inputType="textVisiblePassword"
-                android:singleLine="false"
-                android:textColor="?attr/appColorSecondary"
-                android:textColorHint="?attr/appColorPrimaryVariant1"
-                android:textSize="17sp"
-                tools:ignore="RtlHardcoded,TextContrastCheck,TouchTargetSizeCheck" />
+                android:background="@drawable/round_corners"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:autofillHints="username"
+                    android:backgroundTint="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:drawableStart="@drawable/icon_search"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:gravity="bottom"
+                    android:hint="@string/prompt"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textVisiblePassword"
+                    android:singleLine="false"
+                    android:textColor="?attr/appColorSecondary"
+                    android:textColorHint="?attr/appColorPrimaryVariant1"
+                    android:textSize="17sp"
+                    tools:ignore="RtlHardcoded,TextContrastCheck,TouchTargetSizeCheck" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Search">
 
-    </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Search">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
 

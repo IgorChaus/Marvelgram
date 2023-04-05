@@ -11,10 +11,12 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.marvelvm.R
+import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 
@@ -32,10 +34,11 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-   //     val viewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
         val viewModel: AppViewModel by activityViewModels()
 
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
+        val binding: FragmentMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_main,
+            container, false)
+
         val mainActivity = activity as AppCompatActivity
 
         val actionBar = mainActivity.supportActionBar
@@ -47,22 +50,22 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         actionBar?.setDisplayShowHomeEnabled(true)
         actionBar?.setDisplayHomeAsUpEnabled(false)
 
-        val rv: RecyclerView = view.findViewById(R.id.rv1)
         val llm = SpecialLayout(mainActivity)
 
         //      val llm = GridLayoutManager(this, 3)
-        rv.layoutManager = llm
+        binding.rv1.layoutManager = llm
+
         val adapter = RVAdapter(this)
-        rv.adapter = adapter
+        binding.rv1.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.refreshUsers(it)
         }
-        val editText: EditText = view.findViewById(R.id.editText)
-        editText.addTextChangedListener {
+
+        binding.editText.addTextChangedListener {
                 s -> viewModel.searchPerson(s.toString())
         }
-        return view
+        return binding.root
 
     }
 

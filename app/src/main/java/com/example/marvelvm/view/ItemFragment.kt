@@ -11,12 +11,14 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.marvelvm.R
+import com.example.marvelvm.databinding.FragmentItemBinding
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 
@@ -33,10 +35,11 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-     //   val viewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
         val viewModel: AppViewModel by activityViewModels()
 
-        val view = inflater.inflate(R.layout.fragment_item, container, false)
+   //     val view = inflater.inflate(R.layout.fragment_item, container, false)
+        val binding: FragmentItemBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_item
+            ,container, false)
 
         val name = this.arguments?.getString("name","")
         val description = this.arguments?.getString("description","")
@@ -56,23 +59,21 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         actionBar?.setIcon(null)
         mainActivity.title = name
 
-        val imagePhoto: ImageView = view.findViewById(R.id.imagePhoto)
-        Glide.with(this).load(photo).into(imagePhoto)
+        Glide.with(this).load(photo).into(binding.imagePhoto)
 
-        val textView: TextView = view.findViewById(R.id.textView)
-        textView.text = description
+        binding.textView.text = description
 
-        val rv: RecyclerView = view.findViewById(R.id.rv2)
-        val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        rv.layoutManager = llm
+        val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
+            false)
+        binding.rv2.layoutManager = llm
         val adapter = RVAdapter(this)
-        rv.adapter = adapter
+        binding.rv2.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.refreshUsers(it)
         }
 
-        return view
+        return binding.root
     }
 
 
