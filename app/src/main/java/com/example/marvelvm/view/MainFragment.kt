@@ -6,22 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 
 class MainFragment : Fragment(), RVAdapter.ItemClickListener {
-
+    private var binding: FragmentMainBinding? = null
 
     companion object {
         fun getIstance() = MainFragment()
@@ -32,12 +29,10 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+        savedInstanceState: Bundle?): View? {
 
         val viewModel: AppViewModel by activityViewModels()
-
-        val binding: FragmentMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_main,
-            container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
 
         val mainActivity = activity as AppCompatActivity
 
@@ -53,19 +48,19 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         val llm = SpecialLayout(mainActivity)
 
         //      val llm = GridLayoutManager(this, 3)
-        binding.rv1.layoutManager = llm
+        binding?.rv1?.layoutManager = llm
 
         val adapter = RVAdapter(this)
-        binding.rv1.adapter = adapter
+        binding?.rv1?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.refreshUsers(it)
         }
 
-        binding.editText.addTextChangedListener {
+        binding?.editText?.addTextChangedListener {
                 s -> viewModel.searchPerson(s.toString())
         }
-        return binding.root
+        return binding?.root
 
     }
 
@@ -82,6 +77,11 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
             ?.replace(R.id.container, itemFragment)
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 }
