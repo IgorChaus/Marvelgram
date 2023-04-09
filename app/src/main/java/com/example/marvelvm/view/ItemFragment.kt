@@ -90,4 +90,10 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         textView.text = item.description
 
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
 }
