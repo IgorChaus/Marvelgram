@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
@@ -55,10 +56,10 @@ class MainFragment : Fragment(){
         actionBar?.setDisplayShowHomeEnabled(true)
         actionBar?.setDisplayHomeAsUpEnabled(false)
 
-        val llm = SpecialLayout(mainActivity)
+       // val llm = SpecialLayout(mainActivity)
 
-        //      val llm = GridLayoutManager(this, 3)
-        binding?.rv1?.layoutManager = llm
+    //    val llm = GridLayoutManager(requireContext(), 3)
+    //    binding?.rv1?.layoutManager = llm
 
         binding?.rv1?.adapter = adapter
 

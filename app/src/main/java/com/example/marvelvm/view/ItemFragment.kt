@@ -69,9 +69,9 @@ class ItemFragment: Fragment() {
 
         binding?.textView?.text = description
 
-        val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
+       /* val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
             false)
-        binding?.rv2?.layoutManager = llm
+        binding?.rv2?.layoutManager = llm*/
 
         binding?.rv2?.adapter = adapter
 

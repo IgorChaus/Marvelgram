@@ -1,6 +1,7 @@
 package com.example.marvelvm.view
 
 
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ class RVAdapter: RecyclerView.Adapter<RVAdapter.PersonViewHolder>() {
     var itemClickListener: ((Person) -> Unit)? = null
 
     private var  persons: List<IRow> = listOf()
+    val itemSize = Resources.getSystem().displayMetrics.widthPixels / 3
 
 
     fun refreshUsers(persons: List<IRow>) {
@@ -34,7 +36,22 @@ class RVAdapter: RecyclerView.Adapter<RVAdapter.PersonViewHolder>() {
         }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
+        val view = when (viewType) {
+            R.layout.item -> LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item, parent, false)
+
+            R.layout.item_dark -> LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_dark, parent, false)
+            else -> throw IllegalArgumentException()
+        }
+        view.getLayoutParams().width = itemSize
+        view.getLayoutParams().height = itemSize
+        return PersonViewHolder(view)
+    }
+
+    /*override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
         R.layout.item -> PersonViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item, parent, false))
@@ -42,7 +59,9 @@ class RVAdapter: RecyclerView.Adapter<RVAdapter.PersonViewHolder>() {
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_dark, parent, false))
         else -> throw IllegalArgumentException()
-    }
+    }*/
+
+
 
 
     override fun onBindViewHolder(personViewHolder: PersonViewHolder, position: Int) {
