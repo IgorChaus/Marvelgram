@@ -14,12 +14,9 @@ import com.example.marvelvm.wrappers.IRow
 import com.example.marvelvm.wrappers.UsualItem
 
 
-class RVAdapter(private val itemClickListener: ItemClickListener)
-    : RecyclerView.Adapter<RVAdapter.PersonViewHolder>() {
+class RVAdapter: RecyclerView.Adapter<RVAdapter.PersonViewHolder>() {
 
-    interface ItemClickListener {
-        fun onItemClick(item: Person)
-    }
+    var itemClickListener: ((Person) -> Unit)? = null
 
     private var  persons: List<IRow> = listOf()
 
@@ -57,7 +54,7 @@ class RVAdapter(private val itemClickListener: ItemClickListener)
             if (personViewHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            itemClickListener.onItemClick(persons[position] as Person)
+            itemClickListener?.invoke(persons[position] as Person)
         }
     }
 

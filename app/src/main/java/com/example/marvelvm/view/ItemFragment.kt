@@ -21,11 +21,20 @@ import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
-class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
+class ItemFragment: Fragment() {
     private var binding: FragmentItemBinding? = null
+    private lateinit var adapter: RVAdapter
 
     companion object {
         fun getInstance() = ItemFragment()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = RVAdapter()
+        adapter.itemClickListener = {
+            changeItemScreen(it)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -37,9 +46,6 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         val viewModel: AppViewModel by activityViewModels()
 
         binding = FragmentItemBinding.inflate(inflater, container, false)
-
- //       val binding: FragmentItemBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_item
- //           ,container, false)
 
         val name = this.arguments?.getString("name","")
         val description = this.arguments?.getString("description","")
@@ -66,7 +72,7 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
             false)
         binding?.rv2?.layoutManager = llm
-        val adapter = RVAdapter(this)
+
         binding?.rv2?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
@@ -77,7 +83,7 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
     }
 
 
-    override fun onItemClick(item: Person){
+    fun changeItemScreen(item: Person){
 
         val mainActivity = activity as AppCompatActivity
         mainActivity.title = item.name

@@ -17,11 +17,21 @@ import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 
-class MainFragment : Fragment(), RVAdapter.ItemClickListener {
+@RequiresApi(Build.VERSION_CODES.O)
+class MainFragment : Fragment(){
     private var binding: FragmentMainBinding? = null
+    private lateinit var adapter: RVAdapter
 
     companion object {
         fun getIstance() = MainFragment()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = RVAdapter()
+        adapter.itemClickListener = {
+            startItemScreen(it)
+        }
     }
 
 
@@ -50,7 +60,6 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         //      val llm = GridLayoutManager(this, 3)
         binding?.rv1?.layoutManager = llm
 
-        val adapter = RVAdapter(this)
         binding?.rv1?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
@@ -61,11 +70,9 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
                 s -> viewModel.searchPerson(s.toString())
         }
         return binding?.root
-
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onItemClick(item: Person){
+    private fun startItemScreen(item: Person) {
         val bundle = Bundle()
         val itemFragment = ItemFragment.getInstance()
         bundle.putString("name", item.name)
