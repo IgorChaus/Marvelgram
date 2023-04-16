@@ -76,7 +76,7 @@ class ItemFragment: Fragment() {
         binding?.rv2?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
-            adapter.refreshUsers(it)
+            adapter.submitList(it)
         }
 
         return binding?.root

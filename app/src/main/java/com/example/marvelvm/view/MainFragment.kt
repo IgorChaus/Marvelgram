@@ -64,7 +64,7 @@ class MainFragment : Fragment(){
         binding?.rv1?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
-            adapter.refreshUsers(it)
+            adapter.submitList(it)
         }
 
         binding?.editText?.addTextChangedListener {
