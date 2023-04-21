@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentItemBinding
@@ -21,11 +20,17 @@ import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
-class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
-    private var binding: FragmentItemBinding? = null
+class ItemFragment: Fragment() {
 
-    companion object {
-        fun getInstance() = ItemFragment()
+    private var binding: FragmentItemBinding? = null
+    private lateinit var adapter: RVAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = RVAdapter()
+        adapter.itemClickListener = {
+            changeItemScreen(it)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -34,12 +39,14 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        val viewModel: AppViewModel by activityViewModels()
-
         binding = FragmentItemBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
 
- //       val binding: FragmentItemBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_item
- //           ,container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val viewModel: AppViewModel by activityViewModels()
 
         val name = this.arguments?.getString("name","")
         val description = this.arguments?.getString("description","")
@@ -54,7 +61,7 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
 
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat
-                .getColor(requireContext(), R.color.black)))
+            .getColor(requireContext(), R.color.black)))
 
         actionBar?.setIcon(null)
         mainActivity.title = name
@@ -63,21 +70,20 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
 
         binding?.textView?.text = description
 
-        val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
-            false)
-        binding?.rv2?.layoutManager = llm
-        val adapter = RVAdapter(this)
+        // val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
+        //     false)
+        // binding?.rv2?.layoutManager = llm
+
         binding?.rv2?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
-            adapter.refreshUsers(it)
+            adapter.submitList(it)
         }
 
-        return binding?.root
     }
 
 
-    override fun onItemClick(item: Person){
+    fun changeItemScreen(item: Person){
 
         val mainActivity = activity as AppCompatActivity
         mainActivity.title = item.name
@@ -96,4 +102,7 @@ class ItemFragment: Fragment(), RVAdapter.ItemClickListener {
         binding = null
     }
 
+    companion object {
+        fun getInstance() = ItemFragment()
+    }
 }

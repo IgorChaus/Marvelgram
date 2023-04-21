@@ -17,11 +17,21 @@ import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 
-class MainFragment : Fragment(), RVAdapter.ItemClickListener {
+@RequiresApi(Build.VERSION_CODES.O)
+class MainFragment : Fragment(){
     private var binding: FragmentMainBinding? = null
+    private lateinit var adapter: RVAdapter
 
     companion object {
         fun getIstance() = MainFragment()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = RVAdapter()
+        adapter.itemClickListener = {
+            startItemScreen(it)
+        }
     }
 
 
@@ -31,9 +41,15 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        val viewModel: AppViewModel by activityViewModels()
         binding = FragmentMainBinding.inflate(inflater, container, false)
 
+        return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val viewModel: AppViewModel by activityViewModels()
         val mainActivity = activity as AppCompatActivity
 
         val actionBar = mainActivity.supportActionBar
@@ -45,27 +61,23 @@ class MainFragment : Fragment(), RVAdapter.ItemClickListener {
         actionBar?.setDisplayShowHomeEnabled(true)
         actionBar?.setDisplayHomeAsUpEnabled(false)
 
-        val llm = SpecialLayout(mainActivity)
+        // val llm = SpecialLayout(mainActivity)
 
-        //      val llm = GridLayoutManager(this, 3)
-        binding?.rv1?.layoutManager = llm
+        //    val llm = GridLayoutManager(requireContext(), 3)
+        //    binding?.rv1?.layoutManager = llm
 
-        val adapter = RVAdapter(this)
         binding?.rv1?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
-            adapter.refreshUsers(it)
+            adapter.submitList(it)
         }
 
         binding?.editText?.addTextChangedListener {
                 s -> viewModel.searchPerson(s.toString())
         }
-        return binding?.root
-
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onItemClick(item: Person){
+    private fun startItemScreen(item: Person) {
         val bundle = Bundle()
         val itemFragment = ItemFragment.getInstance()
         bundle.putString("name", item.name)
