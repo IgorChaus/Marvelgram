@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
@@ -42,9 +41,15 @@ class MainFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        val viewModel: AppViewModel by activityViewModels()
         binding = FragmentMainBinding.inflate(inflater, container, false)
 
+        return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val viewModel: AppViewModel by activityViewModels()
         val mainActivity = activity as AppCompatActivity
 
         val actionBar = mainActivity.supportActionBar
@@ -56,10 +61,10 @@ class MainFragment : Fragment(){
         actionBar?.setDisplayShowHomeEnabled(true)
         actionBar?.setDisplayHomeAsUpEnabled(false)
 
-       // val llm = SpecialLayout(mainActivity)
+        // val llm = SpecialLayout(mainActivity)
 
-    //    val llm = GridLayoutManager(requireContext(), 3)
-    //    binding?.rv1?.layoutManager = llm
+        //    val llm = GridLayoutManager(requireContext(), 3)
+        //    binding?.rv1?.layoutManager = llm
 
         binding?.rv1?.adapter = adapter
 
@@ -70,7 +75,6 @@ class MainFragment : Fragment(){
         binding?.editText?.addTextChangedListener {
                 s -> viewModel.searchPerson(s.toString())
         }
-        return binding?.root
     }
 
     private fun startItemScreen(item: Person) {

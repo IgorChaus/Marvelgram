@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentItemBinding
@@ -22,12 +21,9 @@ import com.example.marvelvm.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ItemFragment: Fragment() {
+
     private var binding: FragmentItemBinding? = null
     private lateinit var adapter: RVAdapter
-
-    companion object {
-        fun getInstance() = ItemFragment()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +39,14 @@ class ItemFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        val viewModel: AppViewModel by activityViewModels()
-
         binding = FragmentItemBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val viewModel: AppViewModel by activityViewModels()
 
         val name = this.arguments?.getString("name","")
         val description = this.arguments?.getString("description","")
@@ -60,7 +61,7 @@ class ItemFragment: Fragment() {
 
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat
-                .getColor(requireContext(), R.color.black)))
+            .getColor(requireContext(), R.color.black)))
 
         actionBar?.setIcon(null)
         mainActivity.title = name
@@ -69,9 +70,9 @@ class ItemFragment: Fragment() {
 
         binding?.textView?.text = description
 
-       /* val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
-            false)
-        binding?.rv2?.layoutManager = llm*/
+        // val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
+        //     false)
+        // binding?.rv2?.layoutManager = llm
 
         binding?.rv2?.adapter = adapter
 
@@ -79,7 +80,6 @@ class ItemFragment: Fragment() {
             adapter.submitList(it)
         }
 
-        return binding?.root
     }
 
 
@@ -102,4 +102,7 @@ class ItemFragment: Fragment() {
         binding = null
     }
 
+    companion object {
+        fun getInstance() = ItemFragment()
+    }
 }
