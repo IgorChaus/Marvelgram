@@ -24,12 +24,20 @@ class ItemFragment: Fragment() {
 
     private var binding: FragmentItemBinding? = null
     private lateinit var adapter: RVAdapter
+    private lateinit var item: Person
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        parsArgs()
         adapter = RVAdapter()
         adapter.itemClickListener = {
             changeItemScreen(it)
+        }
+    }
+
+    private fun parsArgs(){
+        requireArguments().getParcelable<Person>(KEY_ITEM)?.let {
+            item = it
         }
     }
 
@@ -48,10 +56,6 @@ class ItemFragment: Fragment() {
 
         val viewModel: AppViewModel by activityViewModels()
 
-        val name = this.arguments?.getString("name","")
-        val description = this.arguments?.getString("description","")
-        val photo = this.arguments?.getString("photo")
-
         val mainActivity = activity as AppCompatActivity
         mainActivity.window.setBackgroundDrawable(ContextCompat
             .getDrawable(requireContext(), R.color.black))
@@ -64,16 +68,13 @@ class ItemFragment: Fragment() {
             .getColor(requireContext(), R.color.black)))
 
         actionBar?.setIcon(null)
-        mainActivity.title = name
+
+        val photo = item.thumbnail.path + "." + item.thumbnail.extension
+        mainActivity.title = item.name
 
         Glide.with(this).load(photo).into(binding!!.imagePhoto)
 
-        binding?.textView?.text = description
-
-        // val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
-        //     false)
-        // binding?.rv2?.layoutManager = llm
-
+        binding?.textView?.text = item.description
         binding?.rv2?.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
@@ -103,6 +104,14 @@ class ItemFragment: Fragment() {
     }
 
     companion object {
-        fun getInstance() = ItemFragment()
+        fun getInstance(item: Person): Fragment{
+            return ItemFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(KEY_ITEM,item)
+                }
+            }
+        }
+
+        private const val KEY_ITEM = "item"
     }
 }
