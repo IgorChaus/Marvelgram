@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.kode_viewmodel.source.DataRepository
+import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
@@ -23,7 +25,12 @@ class MainFragment : Fragment(){
     private val binding: FragmentMainBinding
         get() = _binding ?: throw RuntimeException("FragmentMainBinding == null")
 
-    val viewModel: AppViewModel by activityViewModels()
+    val dataRepository = DataRepository(RetrofitInstance.service)
+    val factory = AppViewModel.Factory(dataRepository)
+
+    val viewModel: AppViewModel by lazy {
+        ViewModelProvider(requireActivity(), factory).get(AppViewModel::class.java)
+    }
 
     private lateinit var adapter: RVAdapter
 
