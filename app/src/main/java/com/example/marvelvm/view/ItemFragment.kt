@@ -88,7 +88,7 @@ class ItemFragment: Fragment() {
     }
 
 
-    fun showItem(item: Person){
+    private fun showItem(item: Person){
 
         val mainActivity = activity as AppCompatActivity
         mainActivity.title = item.name

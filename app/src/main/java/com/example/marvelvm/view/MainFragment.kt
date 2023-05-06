@@ -25,15 +25,15 @@ class MainFragment : Fragment(){
     private val binding: FragmentMainBinding
         get() = _binding ?: throw RuntimeException("FragmentMainBinding == null")
 
-    val dataRepository = DataRepository(RetrofitInstance.service)
-    val factory = AppViewModel.Factory(dataRepository)
+    private val dataRepository = DataRepository(RetrofitInstance.service)
+    private val factory = AppViewModel.Factory(dataRepository)
 
-    val viewModel: AppViewModel by lazy {
-        ViewModelProvider(requireActivity(), factory).get(AppViewModel::class.java)
+    private val viewModel: AppViewModel by lazy {
+        ViewModelProvider(requireActivity(), factory)[AppViewModel::class.java]
     }
 
     private lateinit var adapter: RVAdapter
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = RVAdapter()
