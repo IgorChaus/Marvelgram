@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.kode_viewmodel.source.DataRepository
+import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
@@ -19,81 +21,77 @@ import com.example.marvelvm.viewmodel.AppViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainFragment : Fragment(){
-    private var binding: FragmentMainBinding? = null
-    private lateinit var adapter: RVAdapter
+    private var _binding: FragmentMainBinding? = null
+    private val binding: FragmentMainBinding
+        get() = _binding ?: throw RuntimeException("FragmentMainBinding == null")
 
-    companion object {
-        fun getIstance() = MainFragment()
+    private val dataRepository = DataRepository(RetrofitInstance.service)
+    private val factory = AppViewModel.Factory(dataRepository)
+
+    private val viewModel: AppViewModel by lazy {
+        ViewModelProvider(requireActivity(), factory)[AppViewModel::class.java]
     }
+
+    private lateinit var adapter: RVAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = RVAdapter()
         adapter.itemClickListener = {
-            startItemScreen(it)
+            launchItemScreen(it)
         }
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
-        binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
 
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel: AppViewModel by activityViewModels()
-        val mainActivity = activity as AppCompatActivity
+        setupActionBar()
 
-        val actionBar = mainActivity.supportActionBar
-        actionBar?.setBackgroundDrawable(
-            ColorDrawable(ContextCompat.getColor(mainActivity, R.color.black))
-        )
-        mainActivity.setTitle("")
-        actionBar?.setIcon(R.drawable.marvel)
-        actionBar?.setDisplayShowHomeEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(false)
-
-        // val llm = SpecialLayout(mainActivity)
-
-        //    val llm = GridLayoutManager(requireContext(), 3)
-        //    binding?.rv1?.layoutManager = llm
-
-        binding?.rv1?.adapter = adapter
+        with(binding){
+            rvMain.adapter = adapter
+            etSearch.addTextChangedListener {
+                s -> viewModel.searchPerson(s.toString())
+            }
+        }
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-
-        binding?.editText?.addTextChangedListener {
-                s -> viewModel.searchPerson(s.toString())
-        }
     }
 
-    private fun startItemScreen(item: Person) {
-        val bundle = Bundle()
-        val itemFragment = ItemFragment.getInstance()
-        bundle.putString("name", item.name)
-        bundle.putString("description", item.description)
-        bundle.putString("photo", item.thumbnail.path + "." + item.thumbnail.extension)
-        itemFragment.setArguments(bundle)
+    private fun setupActionBar() {
+        val mainActivity = activity as AppCompatActivity
+        val actionBar = mainActivity.supportActionBar
+        actionBar?.setBackgroundDrawable(
+            ColorDrawable(ContextCompat.getColor(mainActivity, R.color.black))
+        )
+        mainActivity.title = ""
+        actionBar?.setIcon(R.drawable.marvel)
+        actionBar?.setDisplayShowHomeEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
+    private fun launchItemScreen(item: Person) {
 
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container, itemFragment)
+            ?.replace(R.id.container, ItemFragment.getInstance(item))
             ?.addToBackStack(null)
             ?.commit()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
 }

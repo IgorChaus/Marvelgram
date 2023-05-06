@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -22,14 +20,26 @@ import com.example.marvelvm.viewmodel.AppViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 class ItemFragment: Fragment() {
 
-    private var binding: FragmentItemBinding? = null
+    private var _binding: FragmentItemBinding? = null
+    private val binding: FragmentItemBinding
+        get() = _binding ?: throw RuntimeException("FragmentItemBinding == null")
+
+
     private lateinit var adapter: RVAdapter
+    private lateinit var item: Person
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        parsArgs()
         adapter = RVAdapter()
         adapter.itemClickListener = {
-            changeItemScreen(it)
+            showItem(it)
+        }
+    }
+
+    private fun parsArgs(){
+        requireArguments().getParcelable<Person>(KEY_ITEM)?.let {
+            item = it
         }
     }
 
@@ -37,44 +47,19 @@ class ItemFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
-        binding = FragmentItemBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentItemBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel: AppViewModel by activityViewModels()
-
-        val name = this.arguments?.getString("name","")
-        val description = this.arguments?.getString("description","")
-        val photo = this.arguments?.getString("photo")
-
-        val mainActivity = activity as AppCompatActivity
-        mainActivity.window.setBackgroundDrawable(ContextCompat
-            .getDrawable(requireContext(), R.color.black))
-
-        //Выводим стрелочку "Назад"
-        val actionBar = mainActivity.supportActionBar
-
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat
-            .getColor(requireContext(), R.color.black)))
-
-        actionBar?.setIcon(null)
-        mainActivity.title = name
-
-        Glide.with(this).load(photo).into(binding!!.imagePhoto)
-
-        binding?.textView?.text = description
-
-        // val llm = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,
-        //     false)
-        // binding?.rv2?.layoutManager = llm
-
-        binding?.rv2?.adapter = adapter
+        setupActionBar()
+        showItem(item)
+        binding.rvBottom.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
@@ -82,27 +67,50 @@ class ItemFragment: Fragment() {
 
     }
 
+    private fun setupActionBar() {
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.window.setBackgroundDrawable(
+            ContextCompat
+                .getDrawable(requireContext(), R.color.black)
+        )
 
-    fun changeItemScreen(item: Person){
+        //Выводим стрелочку "Назад"
+        val actionBar = mainActivity.supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat
+                    .getColor(requireContext(), R.color.black)
+            )
+        )
+
+        actionBar?.setIcon(null)
+    }
+
+
+    private fun showItem(item: Person){
 
         val mainActivity = activity as AppCompatActivity
         mainActivity.title = item.name
-
-        val imagePhoto: ImageView = requireView().findViewById(R.id.imagePhoto)
         val photo = item.thumbnail.path + "." + item.thumbnail.extension
-        Glide.with(this).load(photo).into(imagePhoto)
-
-        val textView: TextView = requireView().findViewById(R.id.textView)
-        textView.text = item.description
-
+        Glide.with(this).load(photo).into(binding.imagePhoto)
+        binding.tvDescription.text = item.description
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     companion object {
-        fun getInstance() = ItemFragment()
+        fun getInstance(item: Person): Fragment{
+            return ItemFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(KEY_ITEM,item)
+                }
+            }
+        }
+
+        private const val KEY_ITEM = "item"
     }
 }

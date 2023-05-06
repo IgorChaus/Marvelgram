@@ -20,7 +20,7 @@ class RVAdapter: ListAdapter<IRow, RVAdapter.PersonViewHolder>(DiffCallback()) {
 
     var itemClickListener: ((Person) -> Unit)? = null
 
-    val itemSize = Resources.getSystem().displayMetrics.widthPixels / 3
+    private val itemSize = Resources.getSystem().displayMetrics.widthPixels / 3
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
@@ -38,18 +38,18 @@ class RVAdapter: ListAdapter<IRow, RVAdapter.PersonViewHolder>(DiffCallback()) {
                     .inflate(R.layout.item_dark, parent, false)
             else -> throw IllegalArgumentException()
         }
-        view.getLayoutParams().width = itemSize
-        view.getLayoutParams().height = itemSize
+        view.layoutParams.width = itemSize
+        view.layoutParams.height = itemSize
         return PersonViewHolder(view)
     }
 
     override fun onBindViewHolder(personViewHolder: PersonViewHolder, position: Int) {
         val path: String = (getItem(position) as Person).thumbnail.path + "." +
                 (getItem(position) as Person).thumbnail.extension
-        Glide.with(personViewHolder.itemView.getContext()).load(path)
+        Glide.with(personViewHolder.itemView.context).load(path)
             .into(personViewHolder.personPhoto)
         personViewHolder.itemView.setOnClickListener {
-            if (personViewHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+            if (personViewHolder.adapterPosition == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
             itemClickListener?.invoke(getItem(position) as Person)
