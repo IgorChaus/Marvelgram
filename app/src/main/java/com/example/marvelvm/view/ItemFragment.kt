@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -35,7 +33,7 @@ class ItemFragment: Fragment() {
         parsArgs()
         adapter = RVAdapter()
         adapter.itemClickListener = {
-            changeItemScreen(it)
+            showItem(it)
         }
     }
 
@@ -59,26 +57,8 @@ class ItemFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel: AppViewModel by activityViewModels()
-
-        val mainActivity = activity as AppCompatActivity
-        mainActivity.window.setBackgroundDrawable(ContextCompat
-            .getDrawable(requireContext(), R.color.black))
-
-        //Выводим стрелочку "Назад"
-        val actionBar = mainActivity.supportActionBar
-
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat
-            .getColor(requireContext(), R.color.black)))
-
-        actionBar?.setIcon(null)
-
-        val photo = item.thumbnail.path + "." + item.thumbnail.extension
-        mainActivity.title = item.name
-
-        Glide.with(this).load(photo).into(binding.imagePhoto)
-
-        binding.textView.text = item.description
+        setupActionBar()
+        showItem(item)
         binding.rv2.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
@@ -87,20 +67,34 @@ class ItemFragment: Fragment() {
 
     }
 
+    private fun setupActionBar() {
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.window.setBackgroundDrawable(
+            ContextCompat
+                .getDrawable(requireContext(), R.color.black)
+        )
 
-    fun changeItemScreen(item: Person){
+        //Выводим стрелочку "Назад"
+        val actionBar = mainActivity.supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat
+                    .getColor(requireContext(), R.color.black)
+            )
+        )
+
+        actionBar?.setIcon(null)
+    }
+
+
+    fun showItem(item: Person){
 
         val mainActivity = activity as AppCompatActivity
         mainActivity.title = item.name
-
-        val imagePhoto: ImageView = requireView().findViewById(R.id.imagePhoto)
         val photo = item.thumbnail.path + "." + item.thumbnail.extension
-        Glide.with(this).load(photo).into(imagePhoto)
-
-        val textView: TextView = requireView().findViewById(R.id.textView)
- //       binding.textView.text = item.description
-        textView.text = item.description
-
+        Glide.with(this).load(photo).into(binding.imagePhoto)
+        binding.textView.text = item.description
     }
 
     override fun onDestroyView() {

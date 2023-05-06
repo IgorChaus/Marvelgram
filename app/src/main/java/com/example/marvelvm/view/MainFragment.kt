@@ -28,21 +28,21 @@ class MainFragment : Fragment(){
     private lateinit var adapter: RVAdapter
 
     companion object {
-        fun getIstance() = MainFragment()
+        fun getInstance() = MainFragment()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = RVAdapter()
         adapter.itemClickListener = {
-            startItemScreen(it)
+            launchItemScreen(it)
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
         _binding = FragmentMainBinding.inflate(inflater, container, false)
 
@@ -78,7 +78,7 @@ class MainFragment : Fragment(){
         actionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
-    private fun startItemScreen(item: Person) {
+    private fun launchItemScreen(item: Person) {
 
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, ItemFragment.getInstance(item))

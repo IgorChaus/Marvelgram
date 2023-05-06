@@ -25,10 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.getIstance())
+                .replace(R.id.container, MainFragment.getInstance())
                 .commitNow()
         }
-
     }
 
     //Обрабатываем нажатие стрелки назад
