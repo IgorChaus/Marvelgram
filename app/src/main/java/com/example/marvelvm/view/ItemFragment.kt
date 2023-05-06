@@ -59,7 +59,7 @@ class ItemFragment: Fragment() {
         val viewModel: AppViewModel by activityViewModels()
         setupActionBar()
         showItem(item)
-        binding.rv2.adapter = adapter
+        binding.rvBottom.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
@@ -94,7 +94,7 @@ class ItemFragment: Fragment() {
         mainActivity.title = item.name
         val photo = item.thumbnail.path + "." + item.thumbnail.extension
         Glide.with(this).load(photo).into(binding.imagePhoto)
-        binding.textView.text = item.description
+        binding.tvDescription.text = item.description
     }
 
     override fun onDestroyView() {

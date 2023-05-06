@@ -33,11 +33,7 @@ class MainFragment : Fragment(){
     }
 
     private lateinit var adapter: RVAdapter
-
-    companion object {
-        fun getInstance() = MainFragment()
-    }
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = RVAdapter()
@@ -62,8 +58,8 @@ class MainFragment : Fragment(){
         setupActionBar()
 
         with(binding){
-            rv1.adapter = adapter
-            editText.addTextChangedListener {
+            rvMain.adapter = adapter
+            etSearch.addTextChangedListener {
                 s -> viewModel.searchPerson(s.toString())
             }
         }
