@@ -22,7 +22,11 @@ import com.example.marvelvm.viewmodel.AppViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 class ItemFragment: Fragment() {
 
-    private var binding: FragmentItemBinding? = null
+    private var _binding: FragmentItemBinding? = null
+    private val binding: FragmentItemBinding
+        get() = _binding ?: throw RuntimeException("FragmentItemBinding == null")
+
+
     private lateinit var adapter: RVAdapter
     private lateinit var item: Person
 
@@ -45,10 +49,10 @@ class ItemFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
 
-        binding = FragmentItemBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentItemBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,10 +76,10 @@ class ItemFragment: Fragment() {
         val photo = item.thumbnail.path + "." + item.thumbnail.extension
         mainActivity.title = item.name
 
-        Glide.with(this).load(photo).into(binding!!.imagePhoto)
+        Glide.with(this).load(photo).into(binding.imagePhoto)
 
-        binding?.textView?.text = item.description
-        binding?.rv2?.adapter = adapter
+        binding.textView.text = item.description
+        binding.rv2.adapter = adapter
 
         viewModel.itemsLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
@@ -94,13 +98,14 @@ class ItemFragment: Fragment() {
         Glide.with(this).load(photo).into(imagePhoto)
 
         val textView: TextView = requireView().findViewById(R.id.textView)
+ //       binding.textView.text = item.description
         textView.text = item.description
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     companion object {
