@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.kode_viewmodel.source.DataRepository
+import com.example.marvelvm.source.DataRepository
 
 @Suppress("UNCHECKED_CAST")
 class AppViewModelFactory(private val dataRepository: DataRepository) : ViewModelProvider.Factory {

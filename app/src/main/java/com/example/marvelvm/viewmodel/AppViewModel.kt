@@ -3,8 +3,8 @@ package com.example.marvelvm.viewmodel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import com.example.kode_viewmodel.source.DataRepository
 import com.example.marvelvm.model.Person
+import com.example.marvelvm.source.DataRepository
 import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.IRow
 import com.example.marvelvm.wrappers.UsualItem
@@ -18,13 +18,13 @@ class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
     val itemsLive: LiveData<List<IRow>>
         get() = _itemList
 
-    lateinit var persons: List<Person>
+    private lateinit var persons: List<Person>
 
     init{
         fetchPersons()
     }
 
-    fun fetchPersons(){
+    private fun fetchPersons(){
         viewModelScope.launch {
             persons = dataRepository.getPersons()
             val searchPersons: ArrayList<IRow> = arrayListOf()

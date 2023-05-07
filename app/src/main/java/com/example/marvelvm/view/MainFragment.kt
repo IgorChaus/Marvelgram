@@ -12,11 +12,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.kode_viewmodel.source.DataRepository
-import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
+import com.example.marvelvm.source.DataRepository
+import com.example.marvelvm.source.RetrofitInstance
 import com.example.marvelvm.viewmodel.AppViewModel
 import com.example.marvelvm.viewmodel.AppViewModelFactory
 
