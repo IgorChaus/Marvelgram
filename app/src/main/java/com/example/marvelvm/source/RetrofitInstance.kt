@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.source
+package com.example.marvelvm.source
 
 import com.example.marvelvm.api.ApiInterface
 import retrofit2.Retrofit
@@ -8,7 +8,7 @@ object RetrofitInstance {
 
     private const val BASE_URL = "https://static.upstarts.work/tests/marvelgram/"
 
-    val builder = Retrofit.Builder()
+    private val builder = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -61,7 +61,7 @@ class ItemFragment: Fragment() {
         showItem(item)
         binding.rvBottom.adapter = adapter
 
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
+        viewModel.itemsLive.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
 

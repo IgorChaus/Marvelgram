@@ -1,4 +1,4 @@
-package com.example.kode_viewmodel.source
+package com.example.marvelvm.source
 
 import android.util.Log
 import com.example.marvelvm.api.ApiInterface
@@ -6,7 +6,7 @@ import com.example.marvelvm.model.Person
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DataRepository(val service: ApiInterface) {
+class DataRepository(private val service: ApiInterface) {
     suspend fun getPersons(): List<Person> {
         var persons:List<Person> = listOf()
         withContext(Dispatchers.IO) {

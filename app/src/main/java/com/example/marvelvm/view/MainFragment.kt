@@ -12,12 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.kode_viewmodel.source.DataRepository
-import com.example.kode_viewmodel.source.RetrofitInstance
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
+import com.example.marvelvm.source.DataRepository
+import com.example.marvelvm.source.RetrofitInstance
 import com.example.marvelvm.viewmodel.AppViewModel
+import com.example.marvelvm.viewmodel.AppViewModelFactory
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainFragment : Fragment(){
@@ -26,7 +27,7 @@ class MainFragment : Fragment(){
         get() = _binding ?: throw RuntimeException("FragmentMainBinding == null")
 
     private val dataRepository = DataRepository(RetrofitInstance.service)
-    private val factory = AppViewModel.Factory(dataRepository)
+    private val factory = AppViewModelFactory(dataRepository)
 
     private val viewModel: AppViewModel by lazy {
         ViewModelProvider(requireActivity(), factory)[AppViewModel::class.java]
@@ -64,7 +65,7 @@ class MainFragment : Fragment(){
             }
         }
 
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
+        viewModel.itemsLive.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
