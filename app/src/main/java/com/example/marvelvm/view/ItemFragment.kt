@@ -3,14 +3,15 @@ package com.example.marvelvm.view
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import com.bumptech.glide.Glide
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentItemBinding
@@ -55,9 +56,11 @@ class ItemFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val viewModel: AppViewModel by activityViewModels()
+
+        setBackGroundColor()
         setupActionBar()
+        setUpButtonListener()
         showItem(item)
         binding.rvBottom.adapter = adapter
 
@@ -67,14 +70,31 @@ class ItemFragment: Fragment() {
 
     }
 
-    private fun setupActionBar() {
+    private fun setBackGroundColor() {
         val mainActivity = activity as AppCompatActivity
         mainActivity.window.setBackgroundDrawable(
             ContextCompat
                 .getDrawable(requireContext(), R.color.black)
         )
+    }
 
-        //Выводим стрелочку "Назад"
+    private fun setUpButtonListener() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (requireActivity().supportFragmentManager.backStackEntryCount > 0)
+                    requireActivity().supportFragmentManager.popBackStack()
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupActionBar() {
+
+        val mainActivity = activity as AppCompatActivity
         val actionBar = mainActivity.supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setBackgroundDrawable(
@@ -83,7 +103,6 @@ class ItemFragment: Fragment() {
                     .getColor(requireContext(), R.color.black)
             )
         )
-
         actionBar?.setIcon(null)
     }
 
