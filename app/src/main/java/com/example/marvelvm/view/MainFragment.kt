@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
@@ -84,10 +85,8 @@ class MainFragment : Fragment(){
 
     private fun launchItemScreen(item: Person) {
 
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container, ItemFragment.getInstance(item))
-            ?.addToBackStack(null)
-            ?.commit()
+        findNavController().navigate(MainFragmentDirections.actionMainFragmentToItemFragment(item))
+
     }
 
     override fun onDestroyView() {

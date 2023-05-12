@@ -12,6 +12,8 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentItemBinding
@@ -27,20 +29,14 @@ class ItemFragment: Fragment() {
 
 
     private lateinit var adapter: RVAdapter
-    private lateinit var item: Person
+
+    private val args by navArgs<ItemFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parsArgs()
         adapter = RVAdapter()
         adapter.itemClickListener = {
             showItem(it)
-        }
-    }
-
-    private fun parsArgs(){
-        requireArguments().getParcelable<Person>(KEY_ITEM)?.let {
-            item = it
         }
     }
 
@@ -61,7 +57,7 @@ class ItemFragment: Fragment() {
         setBackGroundColor()
         setupActionBar()
         setUpButtonListener()
-        showItem(item)
+        showItem(args.item)
         binding.rvBottom.adapter = adapter
 
         viewModel.itemsLive.observe(viewLifecycleOwner) {
@@ -85,8 +81,7 @@ class ItemFragment: Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                if (requireActivity().supportFragmentManager.backStackEntryCount > 0)
-                    requireActivity().supportFragmentManager.popBackStack()
+                findNavController().popBackStack()
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -119,17 +114,5 @@ class ItemFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun getInstance(item: Person): Fragment{
-            return ItemFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(KEY_ITEM,item)
-                }
-            }
-        }
-
-        private const val KEY_ITEM = "item"
     }
 }
