@@ -2,9 +2,7 @@ package com.example.marvelvm.view
 
 import android.content.res.Resources
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,7 +12,7 @@ import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.IRow
 import com.example.marvelvm.wrappers.LightItem
 
-class RVAdapter: ListAdapter<IRow, RVAdapter.PersonViewHolder>(DiffCallback()) {
+class RVAdapter: ListAdapter<IRow, PersonViewHolder>(DiffCallback()) {
 
     var itemClickListener: ((Person) -> Unit)? = null
 
@@ -54,8 +52,6 @@ class RVAdapter: ListAdapter<IRow, RVAdapter.PersonViewHolder>(DiffCallback()) {
         }
     }
 
-    class PersonViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val personPhoto: ImageView = itemView.findViewById(R.id.imageView)
-    }
+
 
 }
