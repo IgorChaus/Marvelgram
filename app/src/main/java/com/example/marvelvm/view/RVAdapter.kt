@@ -1,6 +1,5 @@
 package com.example.marvelvm.view
 
-
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +12,7 @@ import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.IRow
-import com.example.marvelvm.wrappers.UsualItem
-
+import com.example.marvelvm.wrappers.LightItem
 
 class RVAdapter: ListAdapter<IRow, RVAdapter.PersonViewHolder>(DiffCallback()) {
 
@@ -24,7 +22,7 @@ class RVAdapter: ListAdapter<IRow, RVAdapter.PersonViewHolder>(DiffCallback()) {
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is UsualItem -> R.layout.item
+            is LightItem -> R.layout.item
             is DarkItem -> R.layout.item_dark
             else -> throw IllegalArgumentException()
         }
