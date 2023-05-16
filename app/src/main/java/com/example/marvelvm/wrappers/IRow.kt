@@ -4,7 +4,7 @@ import com.example.marvelvm.model.Person
 
 interface IRow
 
-class UsualItem(id: Int,
+class LightItem(id: Int,
                 name: String,
                 description: String,
                 modified: String,
