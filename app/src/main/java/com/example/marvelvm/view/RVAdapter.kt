@@ -20,17 +20,17 @@ class RVAdapter: ListAdapter<IRow, PersonViewHolder>(DiffCallback()) {
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is LightItem -> R.layout.item
-            is DarkItem -> R.layout.item_dark
+            is LightItem -> ITEM_LIGHT
+            is DarkItem -> ITEM_DARK
             else -> throw IllegalArgumentException()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = when (viewType) {
-            R.layout.item -> LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item, parent, false)
+            ITEM_LIGHT -> LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_light, parent, false)
 
-            R.layout.item_dark -> LayoutInflater.from(parent.context)
+            ITEM_DARK -> LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_dark, parent, false)
             else -> throw IllegalArgumentException()
         }
@@ -52,6 +52,8 @@ class RVAdapter: ListAdapter<IRow, PersonViewHolder>(DiffCallback()) {
         }
     }
 
-
-
+    companion object{
+        private const val ITEM_LIGHT = 100
+        private const val ITEM_DARK = 101
+    }
 }
