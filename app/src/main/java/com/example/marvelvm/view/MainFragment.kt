@@ -74,13 +74,15 @@ class MainFragment : Fragment(){
     private fun setupActionBar() {
         val mainActivity = activity as AppCompatActivity
         val actionBar = mainActivity.supportActionBar
-        actionBar?.setBackgroundDrawable(
-            ColorDrawable(ContextCompat.getColor(mainActivity, R.color.black))
-        )
         mainActivity.title = ""
-        actionBar?.setIcon(R.drawable.marvel)
-        actionBar?.setDisplayShowHomeEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(false)
+        actionBar?.let{
+            it.setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(mainActivity, R.color.black))
+            )
+            it.setIcon(R.drawable.marvel)
+            it.setDisplayShowHomeEnabled(true)
+            it.setDisplayHomeAsUpEnabled(false)
+        }
     }
 
     private fun launchItemScreen(item: Person) {
