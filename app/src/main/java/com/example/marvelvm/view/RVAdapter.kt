@@ -10,7 +10,7 @@ import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.IRow
-import com.example.marvelvm.wrappers.LightItem
+import com.example.marvelvm.wrappers.OrdinaryItem
 
 class RVAdapter: ListAdapter<IRow, PersonViewHolder>(DiffCallback()) {
 
@@ -20,14 +20,14 @@ class RVAdapter: ListAdapter<IRow, PersonViewHolder>(DiffCallback()) {
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is LightItem -> ITEM_LIGHT
+            is OrdinaryItem -> ITEM_ORDINARY
             is DarkItem -> ITEM_DARK
             else -> throw IllegalArgumentException()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = when (viewType) {
-            ITEM_LIGHT -> LayoutInflater.from(parent.context)
+            ITEM_ORDINARY -> LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_light, parent, false)
 
             ITEM_DARK -> LayoutInflater.from(parent.context)
@@ -53,7 +53,7 @@ class RVAdapter: ListAdapter<IRow, PersonViewHolder>(DiffCallback()) {
     }
 
     companion object{
-        private const val ITEM_LIGHT = 100
-        private const val ITEM_DARK = 101
+        private const val ITEM_ORDINARY = 1
+        private const val ITEM_DARK = 2
     }
 }
