@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
+class AppViewModel (private val dataRepository: DataRepository): ViewModel() {
 
     private val _itemList: MutableLiveData<List<IRow>> = MutableLiveData()
     val itemsLive: LiveData<List<IRow>>
