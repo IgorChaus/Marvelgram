@@ -9,10 +9,11 @@ import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.IRow
 import com.example.marvelvm.wrappers.OrdinaryItem
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AppViewModel(private val dataRepository: DataRepository): ViewModel() {
+class AppViewModel @Inject constructor(private val dataRepository: DataRepository): ViewModel() {
 
     private val _itemList: MutableLiveData<List<IRow>> = MutableLiveData()
     val itemsLive: LiveData<List<IRow>>

@@ -1,5 +1,6 @@
 package com.example.marvelvm.view
 
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -13,13 +14,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.marvelvm.MarvelApp
 import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
-import com.example.marvelvm.source.DataRepository
-import com.example.marvelvm.source.RetrofitInstance
 import com.example.marvelvm.viewmodel.AppViewModel
 import com.example.marvelvm.viewmodel.AppViewModelFactory
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainFragment : Fragment(){
@@ -27,14 +28,23 @@ class MainFragment : Fragment(){
     private val binding: FragmentMainBinding
         get() = _binding ?: throw RuntimeException("FragmentMainBinding == null")
 
-    private val dataRepository = DataRepository(RetrofitInstance.service)
-    private val factory = AppViewModelFactory(dataRepository)
+    @Inject
+    lateinit var factory: AppViewModelFactory
+
+    val component by lazy{
+        (requireActivity().application as MarvelApp).component
+    }
 
     private val viewModel: AppViewModel by lazy {
         ViewModelProvider(requireActivity(), factory)[AppViewModel::class.java]
     }
 
     private lateinit var adapter: RVAdapter
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
