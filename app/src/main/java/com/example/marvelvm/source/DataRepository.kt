@@ -5,8 +5,9 @@ import com.example.marvelvm.api.ApiInterface
 import com.example.marvelvm.model.Person
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class DataRepository(private val service: ApiInterface) {
+class DataRepository @Inject constructor(private val service: ApiInterface) {
     suspend fun getPersons(): List<Person> {
         var persons:List<Person> = listOf()
         withContext(Dispatchers.IO) {
