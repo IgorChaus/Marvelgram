@@ -2,7 +2,7 @@ package com.example.marvelvm.wrappers
 
 import com.example.marvelvm.model.Person
 
-interface IRow
+interface AdapterItems
 
 class OrdinaryItem(id: Int,
                    name: String,
@@ -10,7 +10,7 @@ class OrdinaryItem(id: Int,
                    modified: String,
                    thumbnail: Thumbnail,
 ) : Person(id, name, description, modified, thumbnail),
-    IRow
+    AdapterItems
 
 
 class DarkItem(id: Int,
@@ -19,5 +19,5 @@ class DarkItem(id: Int,
                 modified: String,
                 thumbnail: Thumbnail,
 ) : Person(id, name, description, modified, thumbnail),
-    IRow
+    AdapterItems
 

@@ -9,10 +9,10 @@ import com.bumptech.glide.Glide
 import com.example.marvelvm.R
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.wrappers.DarkItem
-import com.example.marvelvm.wrappers.IRow
+import com.example.marvelvm.wrappers.AdapterItems
 import com.example.marvelvm.wrappers.OrdinaryItem
 
-class RVAdapter: ListAdapter<IRow, PersonViewHolder>(DiffCallback()) {
+class RVAdapter: ListAdapter<AdapterItems, PersonViewHolder>(DiffCallback()) {
 
     var itemClickListener: ((Person) -> Unit)? = null
 

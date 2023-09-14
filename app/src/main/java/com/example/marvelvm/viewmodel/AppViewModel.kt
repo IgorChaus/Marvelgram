@@ -6,7 +6,7 @@ import androidx.lifecycle.*
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.source.DataRepository
 import com.example.marvelvm.wrappers.DarkItem
-import com.example.marvelvm.wrappers.IRow
+import com.example.marvelvm.wrappers.AdapterItems
 import com.example.marvelvm.wrappers.OrdinaryItem
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,8 +15,8 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 class AppViewModel @Inject constructor(private val dataRepository: DataRepository): ViewModel() {
 
-    private val _itemList: MutableLiveData<List<IRow>> = MutableLiveData()
-    val itemsLive: LiveData<List<IRow>>
+    private val _itemList: MutableLiveData<List<AdapterItems>> = MutableLiveData()
+    val itemsLive: LiveData<List<AdapterItems>>
         get() = _itemList
 
     private lateinit var persons: List<Person>
@@ -28,7 +28,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
     private fun fetchPersons(){
         viewModelScope.launch {
             persons = dataRepository.getPersons()
-            val searchPersons: ArrayList<IRow> = arrayListOf()
+            val searchPersons: ArrayList<AdapterItems> = arrayListOf()
             persons.forEach {
                 searchPersons.add(OrdinaryItem(it.id,it.name,it.description,it.modified,it.thumbnail))
             }
@@ -38,7 +38,7 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
     }
 
     fun searchPerson(s: String){
-        val searchPersons: ArrayList<IRow> = arrayListOf()
+        val searchPersons: ArrayList<AdapterItems> = arrayListOf()
         persons.forEach {
             if (it.name.contains(s,ignoreCase = true)){
                 searchPersons.add(OrdinaryItem(it.id,it.name,it.description,it.modified,it.thumbnail))

@@ -2,11 +2,11 @@ package com.example.marvelvm.view
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.marvelvm.wrappers.DarkItem
-import com.example.marvelvm.wrappers.IRow
+import com.example.marvelvm.wrappers.AdapterItems
 import com.example.marvelvm.wrappers.OrdinaryItem
 
-class DiffCallback: DiffUtil.ItemCallback<IRow>() {
-    override fun areItemsTheSame(oldItem: IRow, newItem: IRow): Boolean {
+class DiffCallback: DiffUtil.ItemCallback<AdapterItems>() {
+    override fun areItemsTheSame(oldItem: AdapterItems, newItem: AdapterItems): Boolean {
         return when{
             oldItem is OrdinaryItem && newItem is OrdinaryItem -> {
                 oldItem.id == newItem.id
@@ -18,7 +18,7 @@ class DiffCallback: DiffUtil.ItemCallback<IRow>() {
         }
     }
 
-    override fun areContentsTheSame(oldItem: IRow, newItem: IRow): Boolean {
+    override fun areContentsTheSame(oldItem: AdapterItems, newItem: AdapterItems): Boolean {
         return when{
             oldItem is OrdinaryItem && newItem is OrdinaryItem -> {
                 oldItem.equals(newItem)
