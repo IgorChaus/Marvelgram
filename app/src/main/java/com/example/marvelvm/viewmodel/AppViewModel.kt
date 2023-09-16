@@ -5,8 +5,8 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.source.DataRepository
-import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.AdapterItems
+import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.OrdinaryItem
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,13 +27,15 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
 
     private fun fetchPersons(){
         viewModelScope.launch {
-            persons = dataRepository.getPersons()
-            val searchPersons = persons.map {
-                OrdinaryItem(
-                    it.id, it.name, it.description, it.modified, it.thumbnail
-                )
+            dataRepository.getPersons().collect(){
+                persons = it
+                val searchPersons = persons.map {
+                    OrdinaryItem(
+                        it.id, it.name, it.description, it.modified, it.thumbnail
+                    )
+                }
+                _itemList.postValue(searchPersons)
             }
-            _itemList.postValue(searchPersons)
         }
     }
 
