@@ -37,22 +37,20 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
                         it.id, it.name, it.description, it.modified, it.thumbnail
                     )
                 }
-                _stateFlow.emit(searchPersons)
+                _stateFlow.value = searchPersons
             }
         }
     }
 
     fun searchPerson(s: String) {
-        viewModelScope.launch {
-            val searchPersons = persons.map {
-                if (it.name.contains(s, ignoreCase = true)) {
-                    OrdinaryItem(it.id, it.name, it.description, it.modified, it.thumbnail)
-                } else {
-                    DarkItem(it.id, it.name, it.description, it.modified, it.thumbnail)
-                }
+        val searchPersons = persons.map {
+            if (it.name.contains(s, ignoreCase = true)) {
+                OrdinaryItem(it.id, it.name, it.description, it.modified, it.thumbnail)
+            } else {
+                DarkItem(it.id, it.name, it.description, it.modified, it.thumbnail)
             }
-            _stateFlow.emit(searchPersons)
         }
+        _stateFlow.value = searchPersons
     }
 
 }
