@@ -12,6 +12,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -19,6 +20,7 @@ import com.example.marvelvm.R
 import com.example.marvelvm.databinding.FragmentItemBinding
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ItemFragment: Fragment() {
@@ -60,8 +62,10 @@ class ItemFragment: Fragment() {
         showItem(args.item)
         binding.rvBottom.adapter = adapter
 
-        viewModel.itemsLive.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        lifecycleScope.launch {
+            viewModel.stateFlow.collect() {
+                adapter.submitList(it)
+            }
         }
 
     }

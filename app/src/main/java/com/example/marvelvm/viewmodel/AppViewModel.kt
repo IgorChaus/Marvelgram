@@ -8,6 +8,8 @@ import com.example.marvelvm.source.DataRepository
 import com.example.marvelvm.wrappers.AdapterItems
 import com.example.marvelvm.wrappers.DarkItem
 import com.example.marvelvm.wrappers.OrdinaryItem
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,9 +17,10 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 class AppViewModel @Inject constructor(private val dataRepository: DataRepository): ViewModel() {
 
-    private val _itemList: MutableLiveData<List<AdapterItems>> = MutableLiveData()
-    val itemsLive: LiveData<List<AdapterItems>>
-        get() = _itemList
+    private val _stateFlow =
+        MutableStateFlow<List<AdapterItems>>(emptyList())
+    val stateFlow = _stateFlow.asStateFlow()
+
 
     private lateinit var persons: List<Person>
 
@@ -34,20 +37,22 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
                         it.id, it.name, it.description, it.modified, it.thumbnail
                     )
                 }
-                _itemList.postValue(searchPersons)
+                _stateFlow.emit(searchPersons)
             }
         }
     }
 
     fun searchPerson(s: String) {
-        val searchPersons = persons.map {
-            if (it.name.contains(s, ignoreCase = true)) {
-                OrdinaryItem(it.id, it.name, it.description, it.modified, it.thumbnail)
-            } else {
-                DarkItem(it.id, it.name, it.description, it.modified, it.thumbnail)
+        viewModelScope.launch {
+            val searchPersons = persons.map {
+                if (it.name.contains(s, ignoreCase = true)) {
+                    OrdinaryItem(it.id, it.name, it.description, it.modified, it.thumbnail)
+                } else {
+                    DarkItem(it.id, it.name, it.description, it.modified, it.thumbnail)
+                }
             }
+            _stateFlow.emit(searchPersons)
         }
-        _itemList.postValue(searchPersons)
     }
 
 }

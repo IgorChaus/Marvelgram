@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.marvelvm.MarvelApp
 import com.example.marvelvm.R
@@ -20,6 +21,7 @@ import com.example.marvelvm.databinding.FragmentMainBinding
 import com.example.marvelvm.model.Person
 import com.example.marvelvm.viewmodel.AppViewModel
 import com.example.marvelvm.viewmodel.AppViewModelFactory
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -76,9 +78,12 @@ class MainFragment : Fragment(){
             }
         }
 
-        viewModel.itemsLive.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        lifecycleScope.launch {
+            viewModel.stateFlow.collect(){
+                adapter.submitList(it)
+            }
         }
+
     }
 
     private fun setupActionBar() {
