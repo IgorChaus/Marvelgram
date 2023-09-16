@@ -28,22 +28,21 @@ class AppViewModel @Inject constructor(private val dataRepository: DataRepositor
     private fun fetchPersons(){
         viewModelScope.launch {
             persons = dataRepository.getPersons()
-            val searchPersons: ArrayList<AdapterItems> = arrayListOf()
-            persons.forEach {
-                searchPersons.add(OrdinaryItem(it.id,it.name,it.description,it.modified,it.thumbnail))
+            val searchPersons = persons.map {
+                OrdinaryItem(
+                    it.id, it.name, it.description, it.modified, it.thumbnail
+                )
             }
             _itemList.postValue(searchPersons)
-
         }
     }
 
-    fun searchPerson(s: String){
-        val searchPersons: ArrayList<AdapterItems> = arrayListOf()
-        persons.forEach {
-            if (it.name.contains(s,ignoreCase = true)){
-                searchPersons.add(OrdinaryItem(it.id,it.name,it.description,it.modified,it.thumbnail))
-            }else{
-                searchPersons.add(DarkItem(it.id,it.name,it.description,it.modified,it.thumbnail))
+    fun searchPerson(s: String) {
+        val searchPersons = persons.map {
+            if (it.name.contains(s, ignoreCase = true)) {
+                OrdinaryItem(it.id, it.name, it.description, it.modified, it.thumbnail)
+            } else {
+                DarkItem(it.id, it.name, it.description, it.modified, it.thumbnail)
             }
         }
         _itemList.postValue(searchPersons)
